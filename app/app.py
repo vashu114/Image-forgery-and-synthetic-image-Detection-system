@@ -28,7 +28,7 @@ def download_model(file_id, output_path):
 
     import gdown
 
-    st.info(f"Downloading model: {output_path}")
+    
 
     url = f"https://drive.google.com/uc?id={file_id}"
 
