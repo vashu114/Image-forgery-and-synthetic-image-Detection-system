@@ -1,1 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
 
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment variables and secrets
+.env
+.streamlit/secrets.toml
+
+# Trained model weights
+*.keras
+*.h5
+*.hdf5
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Dataset files
+datasets/
+data/
+
+# Temporary and system files
+.DS_Store
+Thumbs.db
