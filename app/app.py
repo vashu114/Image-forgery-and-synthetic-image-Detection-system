@@ -12,28 +12,57 @@ st.set_page_config(
 )
 
 # MODEL PATHS
-CIFAKE_MODEL_PATH = "/content/cifake_efficientnetb0_best.keras"
-CASIA_MODEL_PATH = "/content/casia_improved_stage1_best.keras"
+# MODEL PATHS AND GOOGLE DRIVE DOWNLOAD
+CIFAKE_MODEL_PATH = "cifake_efficientnetb0_best.keras"
+CASIA_MODEL_PATH = "casia_improved_stage1_best.keras"
+
+CIFAKE_FILE_ID = "17jA1j7fjwb8tWBcfH2QLMC7NQR3RYToC"
+CASIA_FILE_ID = "1qkxOC4nR0kGYIi83OafuwsZMd5g-5S2C"
+
+
+# DOWNLOAD MODELS FROM GOOGLE DRIVE
+def download_model(file_id, output_path):
+
+    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+        return
+
+    import gdown
+
+    st.info(f"Downloading model: {output_path}")
+
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    downloaded_file = gdown.download(
+        url=url,
+        output=output_path,
+        quiet=False
+    )
+
+    if downloaded_file is None or not os.path.exists(output_path):
+        raise RuntimeError(
+            f"Model download failed: {output_path}. "
+            "Please check Google Drive sharing permissions."
+        )
+
+    if os.path.getsize(output_path) == 0:
+        raise RuntimeError(f"Downloaded model is empty: {output_path}")
+
 
 # LOAD MODELS
 @st.cache_resource
 def load_models():
-    if not os.path.exists(CIFAKE_MODEL_PATH):
-        raise FileNotFoundError(
-            f"CIFAKE model not found: {CIFAKE_MODEL_PATH}"
-        )
 
-    if not os.path.exists(CASIA_MODEL_PATH):
-        raise FileNotFoundError(
-            f"CASIA model not found: {CASIA_MODEL_PATH}"
-        )
+    download_model(CIFAKE_FILE_ID, CIFAKE_MODEL_PATH)
+    download_model(CASIA_FILE_ID, CASIA_MODEL_PATH)
 
     cifake_model = tf.keras.models.load_model(
-        CIFAKE_MODEL_PATH, compile=False
+        CIFAKE_MODEL_PATH,
+        compile=False
     )
 
     casia_model = tf.keras.models.load_model(
-        CASIA_MODEL_PATH, compile=False
+        CASIA_MODEL_PATH,
+        compile=False
     )
 
     return cifake_model, casia_model
